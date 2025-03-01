@@ -1,0 +1,37 @@
+{
+  "name": "reservasaspenback",
+  "version": "1.0.0",
+  "description": "Backend de las reservas de Aspen",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --platform=node --outfile=dist/index.cjs --minify",
+    "start": "node --env-file=.env dist/index.cjs",
+    "dev": "node --watch --env-file=.env src/index.js",
+    "lint": "eslint . --fix"
+  },
+  "keywords": [
+    "backend",
+    "reservas",
+    "aspen",
+    "reservas",
+    "backend",
+    "aspen",
+    "backend",
+    "motos"
+  ],
+  "author": "Anabela Guillermo",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3"
+  }
+}
