@@ -22,7 +22,6 @@ export const post_userValidationSchema = Joi.object({
     'any.required': "El campo 'username' es requerido",
     '*': "Revisa el campo 'username'",
   }),
-  // Es lo mismo usar .pattern()
   password: Joi.string().trim().regex(passwordRegex).required().messages({
     'string.pattern.base':
       "El campo 'password' debe tener una minúscula, una mayúscula, un dígito, y un caracter especial, entre 8 y 15 caracteres",
