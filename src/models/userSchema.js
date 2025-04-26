@@ -12,6 +12,12 @@ const User = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -24,6 +30,14 @@ const User = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
+  },
+  resetToken: {
+    type: String,
+    default: null,
+  },
+  resetTokenExpiry: {
+    type: Date,
+    default: null,
   },
 });
 
