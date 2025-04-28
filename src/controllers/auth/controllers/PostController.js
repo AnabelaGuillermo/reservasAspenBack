@@ -32,9 +32,7 @@ export class PostController {
       const userInfo = {
         user: {
           id: user._id,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          username: user.username,
+          fullname: user.fullname,
           email: user.email,
           isAdmin: user.isAdmin,
         },
@@ -48,8 +46,8 @@ export class PostController {
         data: token,
         message: 'Inicio de sesión exitoso',
       });
-    } catch (e) {
-      internalError(res, e, 'Error al iniciar sesión');
+    } catch (error) {
+      internalError(res, error, 'Error al iniciar sesión');
     }
   }
 
@@ -57,9 +55,12 @@ export class PostController {
     const { email } = req.body;
 
     try {
-      const user = await UserModel.findOne({ email });
+      const user = await UserModel.findOne({ email, isActive: true });
+
       if (!user) {
-        return res.status(HttpCodes.NOT_FOUND).json({ message: 'No existe un usuario con ese email' });
+        return res.status(HttpCodes.NOT_FOUND).json({
+          message: 'No existe un usuario activo con ese email',
+        });
       }
 
       const resetToken = crypto.randomBytes(20).toString('hex');
@@ -72,19 +73,30 @@ export class PostController {
       const mailOptions = {
         to: email,
         subject: 'Recuperación de Contraseña',
-        html: `<p>Haz clic <a href="http://tu_dominio/reset-password/${resetToken}">aquí</a> para recuperar tu contraseña.</p>`,
+        html: `<p>Hola ${user.fullname},</p>
+               <p>Haz clic <a href="*${resetToken}">aquí</a> para recuperar tu contraseña.</p>
+               <p>Este enlace expirará en 1 hora.</p>`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.error(error);
-          return res.status(HttpCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error al enviar el correo de recuperación' });
+          console.error('Error al enviar correo:', error);
+          return res.status(HttpCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'Error al enviar el correo de recuperación',
+          });
         }
         console.log('Correo enviado: ' + info.response);
-        res.json({ message: 'Se ha enviado un correo con las instrucciones para recuperar la contraseña' });
+        res.json({
+          message:
+            'Se ha enviado un correo con las instrucciones para recuperar la contraseña',
+        });
       });
     } catch (error) {
-      internalError(res, error, 'Error al procesar la solicitud de recuperación de contraseña');
+      internalError(
+        res,
+        error,
+        'Error al procesar la solicitud de recuperación de contraseña',
+      );
     }
   }
 
@@ -99,10 +111,13 @@ export class PostController {
       });
 
       if (!user) {
-        return res.status(HttpCodes.BAD_REQUEST).json({ message: 'Token de recuperación inválido o expirado' });
+        return res.status(HttpCodes.BAD_REQUEST).json({
+          message: 'Token de recuperación inválido o expirado',
+        });
       }
 
       const hashedPassword = bcryptjs.hashSync(password, 10);
+
       user.password = hashedPassword;
       user.resetToken = null;
       user.resetTokenExpiry = null;

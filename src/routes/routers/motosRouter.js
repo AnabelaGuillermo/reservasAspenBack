@@ -13,8 +13,17 @@ motosRouter.post(
 );
 
 motosRouter.get('/', Motos.GetController.getMotos);
+
 motosRouter.put(
   '/:id',
   isAuthenticated,
   isAdmin,
   Motos.PutController.putMoto,
+);
+
+motosRouter.delete(
+  '/:id',
+  isAuthenticated,
+  isAdmin,
+  Motos.DeleteController.deleteMoto,
+);

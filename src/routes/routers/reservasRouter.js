@@ -12,6 +12,7 @@ reservasRouter.post(
   '/',
   isAuthenticated,
   Reservas.PostController.postReserva,
+);
 
 reservasRouter.put(
   '/:id',
