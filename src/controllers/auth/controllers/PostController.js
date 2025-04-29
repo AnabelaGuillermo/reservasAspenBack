@@ -18,11 +18,26 @@ const transporter = nodemailer.createTransport({
 export class PostController {
   static async postLogin(req, res) {
     const { email, password } = req.body;
+    console.log('postLogin - Email recibido:', email);
+    console.log('postLogin - Contraseña recibida:', password);
 
     try {
       const user = await UserModel.findOne({ email, isActive: true });
+      console.log('postLogin - Usuario encontrado:', user);
 
-      if (!user || !bcryptjs.compareSync(password, user.password)) {
+      if (!user) {
+        console.log('postLogin - Usuario no encontrado o inactivo');
+        return res.status(HttpCodes.UNAUTHORIZED).json({
+          data: null,
+          message: 'Email y/o contraseña incorrectos',
+        });
+      }
+
+      const passwordMatch = bcryptjs.compareSync(password, user.password);
+      console.log('postLogin - Coincidencia de contraseña:', passwordMatch);
+
+      if (!passwordMatch) {
+        console.log('postLogin - Contraseña incorrecta');
         return res.status(HttpCodes.UNAUTHORIZED).json({
           data: null,
           message: 'Email y/o contraseña incorrectos',
@@ -41,12 +56,14 @@ export class PostController {
       const token = jwt.sign(userInfo, process.env.SECRET_KEY, {
         expiresIn: '1h',
       });
+      console.log('postLogin - Token generado:', token);
 
       res.json({
         data: token,
         message: 'Inicio de sesión exitoso',
       });
     } catch (error) {
+      console.error('postLogin - Error:', error);
       internalError(res, error, 'Error al iniciar sesión');
     }
   }
@@ -74,8 +91,8 @@ export class PostController {
         to: email,
         subject: 'Recuperación de Contraseña',
         html: `<p>Hola ${user.fullname},</p>
-               <p>Haz clic <a href="*${resetToken}">aquí</a> para recuperar tu contraseña.</p>
-               <p>Este enlace expirará en 1 hora.</p>`,
+                       <p>Haz clic <a href="*${resetToken}">aquí</a> para recuperar tu contraseña.</p>
+                       <p>Este enlace expirará en 1 hora.</p>`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
