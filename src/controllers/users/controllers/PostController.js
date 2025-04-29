@@ -11,17 +11,19 @@ export class PostController {
     const hashedPassword = bcryptjs.hashSync(body.password, 10);
 
     const newUser = new UserModel({
-      firstname: body.firstname,
-      lastname: body.lastname,
-      username: body.username,
+      fullname: body.fullname,
+      email: body.email,
       password: hashedPassword,
+      isAdmin: body.isAdmin || false,
     });
 
     try {
-      await newUser.save();
+      const savedUser = await newUser.save();
+
+      const { password, ...userWithoutPassword } = savedUser.toObject();
 
       res.status(HttpCodes.CREATED).json({
-        data: null,
+        data: userWithoutPassword,
         message: 'Usuario guardado correctamente',
       });
     } catch (e) {

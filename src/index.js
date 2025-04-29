@@ -1,6 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
+
+import './database/database.js';
 
 import { mainRouter } from './routes/mainRouter.js';
 

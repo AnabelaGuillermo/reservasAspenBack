@@ -21,4 +21,5 @@ export const post_userValidationSchema = Joi.object({
     'any.required': "El campo 'password' es requerido",
     '*': "Revisa el campo 'password'",
   }),
+  isAdmin: Joi.boolean().optional(),
 });
