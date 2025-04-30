@@ -12,18 +12,18 @@ motosRouter.post(
   Motos.PostController.postMoto,
 );
 
-motosRouter.get('/', Motos.GetController.getMotos);
+motosRouter.get('/', Motos.GetController);
 
 motosRouter.put(
   '/:id',
   isAuthenticated,
   isAdmin,
-  Motos.PutController.putMoto,
+  Motos.PutController,
 );
 
 motosRouter.delete(
   '/:id',
   isAuthenticated,
   isAdmin,
-  Motos.DeleteController.deleteMoto,
+  Motos.DeleteController,
 );
