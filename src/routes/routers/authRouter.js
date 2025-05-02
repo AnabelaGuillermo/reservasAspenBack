@@ -18,12 +18,16 @@ authRouter.post(
 
 authRouter.post(
   '/forgot-password',
-  (req, res, next) => validateBody(req, res, next, post_forgotPasswordValidationSchema),
+  (req, res, next) =>
+    validateBody(req, res, next, post_forgotPasswordValidationSchema),
   Auth.PostController.forgotPassword,
 );
 
 authRouter.post(
   '/reset-password/:token',
-  (req, res, next) => validateBody(req, res, next, post_resetPasswordValidationSchema),
+  (req, res, next) =>
+    validateBody(req, res, next, post_resetPasswordValidationSchema),
   Auth.PostController.resetPassword,
 );
+
+authRouter.post('/refresh-token', Auth.PostController.postRefreshToken);
