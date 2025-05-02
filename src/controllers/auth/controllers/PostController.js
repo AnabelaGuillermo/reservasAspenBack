@@ -41,7 +41,7 @@ export class PostController {
 
       const userInfo = {
         user: {
-          id: user._id,
+          _id: user._id, // Cambia 'id' a '_id'
           fullname: user.fullname,
           email: user.email,
           isAdmin: user.isAdmin,
