@@ -15,7 +15,7 @@ export class GetController {
         });
       } else {
         const reservas = await ReservaModel.find({ userId: user._id }).populate(
-          'motoId',
+          'motoId userId',
         );
         res.json({
           data: reservas,

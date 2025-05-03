@@ -23,3 +23,12 @@ reservasRouter.delete(
   isAdmin,
   Reservas.DeleteController.deleteReserva,
 );
+
+reservasRouter.post(
+  '/restore',
+  isAuthenticated,
+  isAdmin,
+  Reservas.RestoreController.restoreReserva,
+);
+
+export default reservasRouter;

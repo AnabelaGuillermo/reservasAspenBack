@@ -3,12 +3,17 @@ import mongoose from 'mongoose';
 const reservaSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Users',
     required: true,
   },
   motoId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Moto',
+    required: true,
+  },
+
+  cliente: {
+    type: String,
     required: true,
   },
   fecha: {
@@ -39,7 +44,7 @@ const reservaSchema = new mongoose.Schema({
     {
       modifiedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Users',
       },
       modificationDate: {
         type: Date,
@@ -52,7 +57,7 @@ const reservaSchema = new mongoose.Schema({
   ],
   modifiedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Users',
     required: true,
   },
   modificationDate: {
