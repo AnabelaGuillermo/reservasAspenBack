@@ -5,14 +5,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import './database/database.js';
-
 import { mainRouter } from './routes/mainRouter.js';
+import './cron/deleteOldEntregadas.js';
 
 console.clear();
 console.log('Inicializando servidor...');
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 app.use(morgan('dev'));
