@@ -21,9 +21,18 @@ motosRouter.put(
   Motos.PutController,
 );
 
+motosRouter.put( // Ruta para incrementar el stock - CORRECCIÓN AQUÍ
+  '/:id/incrementStock',
+  isAuthenticated,
+  isAdmin,
+  Motos.IncrementStockController.incrementStock // Accede al método estático
+);
+
 motosRouter.delete(
   '/:id',
   isAuthenticated,
   isAdmin,
   Motos.DeleteController,
 );
+
+export default motosRouter;
