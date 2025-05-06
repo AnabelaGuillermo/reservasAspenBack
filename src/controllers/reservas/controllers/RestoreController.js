@@ -4,38 +4,28 @@ import { internalError } from '../../../helpers/helpers.js';
 
 export class RestoreController {
   static async restoreReserva(req, res) {
-    const {
-      motoId,
-      recibo,
-      numeroComanda,
-      cliente,
-      observaciones,
-      fecha,
-      hora,
-      userId,
-    } = req.body;
+    const { _id } = req.body;
 
     try {
-      const reserva = new ReservaModel({
-        userId: userId,
-        motoId,
-        fecha,
-        hora,
-        recibo,
-        numeroComanda,
-        cliente,
-        observaciones,
-        modifiedBy: req.user._id,
-      });
+      const reservaRestaurada = await ReservaModel.findByIdAndUpdate(
+        _id,
+        { entregado: false, fechaEntrega: null },
+        { new: true }
+      );
 
-      await reserva.save();
+      if (!reservaRestaurada) {
+        return res.status(HttpCodes.NOT_FOUND).json({
+          message: 'No se encontró la reserva entregada con este ID.',
+        });
+      }
 
-      res.status(HttpCodes.CREATED).json({
-        data: reserva,
-        message: 'Reserva restaurada con éxito',
+      res.status(HttpCodes.OK).json({
+        data: reservaRestaurada,
+        message: 'Entrega deshecha con éxito. La reserva ha vuelto a la lista.',
       });
     } catch (e) {
-      internalError(res, e, 'Error al restaurar la reserva');
+      console.error('Error al deshacer la entrega:', e);
+      internalError(res, e, 'Error al deshacer la entrega');
     }
   }
 }
