@@ -41,15 +41,20 @@ export class PostController {
 
       const userInfo = {
         user: {
-          _id: user._id, // Cambia 'id' a '_id'
+          _id: user._id,
           fullname: user.fullname,
           email: user.email,
           isAdmin: user.isAdmin,
         },
       };
 
+      const now = new Date();
+      const midnight = new Date(now);
+      midnight.setHours(24, 0, 0, 0);
+      const secondsUntilMidnight = (midnight.getTime() - now.getTime()) / 1000;
+
       const accessToken = jwt.sign(userInfo, process.env.SECRET_KEY, {
-        expiresIn: '15m',
+        expiresIn: Math.floor(secondsUntilMidnight),
       });
 
       const refreshToken = jwt.sign(userInfo, process.env.REFRESH_KEY, {
@@ -81,7 +86,13 @@ export class PostController {
       const newAccessToken = jwt.sign(
         { user: decoded.user },
         process.env.SECRET_KEY,
-        { expiresIn: '15m' },
+        {
+          expiresIn: Math.floor(
+            (new Date(new Date().setHours(24, 0, 0, 0)).getTime() -
+              new Date().getTime()) /
+              1000,
+          ),
+        },
       );
 
       res.json({
