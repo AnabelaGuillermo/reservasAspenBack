@@ -6,6 +6,7 @@ import { internalError } from '../../../helpers/helpers.js';
 export class PostController {
   static async postReserva(req, res) {
     const {
+      userId,
       motoId,
       recibo,
       numeroComanda,
@@ -16,9 +17,12 @@ export class PostController {
     } = req.body;
     const { user } = req;
 
+    console.log('Backend - userId recibido de req.body:', userId);
+    console.log('Backend - user._id (ID del admin logueado):', user._id);
+
     try {
       const reserva = new ReservaModel({
-        userId: user._id,
+        userId: userId,
         motoId,
         fecha,
         hora,
