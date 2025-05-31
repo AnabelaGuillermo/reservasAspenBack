@@ -16,3 +16,7 @@ userRouter.post(
   (req, res, next) => validateBody(req, res, next, post_userValidationSchema),
   Users.PostController.postUser,
 );
+
+userRouter.put('/:id', isAuthenticated, isAdmin, Users.PutController.updateUser);
+
+userRouter.delete('/:id', isAuthenticated, isAdmin, Users.DeleteController.deleteUser);
