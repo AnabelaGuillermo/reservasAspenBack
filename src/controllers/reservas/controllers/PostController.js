@@ -2,6 +2,7 @@ import HttpCodes from 'http-status-codes';
 import ReservaModel from '../../../models/reservaSchema.js';
 import MotoModel from '../../../models/motoSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
+import { registrarActividad } from '../../actividades/index.js';
 
 export class PostController {
   static async postReserva(req, res) {
@@ -60,6 +61,12 @@ export class PostController {
           message: `No hay stock disponible para ${moto.name}. La reserva se ha creado.`,
         });
       }
+
+      let detallesReserva = `Reserva para ${cliente} de la moto ${moto.name} (ID: ${motoId}).`;
+      if (observaciones) {
+        detallesReserva += ` Observaciones: ${observaciones}`;
+      }
+        await registrarActividad(user._id, 'Crear reserva', detallesReserva);
 
       res.status(HttpCodes.CREATED).json({
         data: reserva,

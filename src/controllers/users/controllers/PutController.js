@@ -1,6 +1,7 @@
 import HttpCodes from 'http-status-codes';
 import UserModel from '../../../models/userSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
+import { registrarActividad } from '../../actividades/index.js';
 
 export class PutController {
   static async updateUser(req, res) {
@@ -20,6 +21,8 @@ export class PutController {
           message: 'Usuario no encontrado',
         });
       }
+
+      await registrarActividad(req.user._id, 'Editar rol', `Se cambió el rol del usuario ${updatedUser.email} a ${isAdmin ? 'admin' : 'no admin'}.`);
 
       const { password, ...userWithoutPassword } = updatedUser.toObject();
 

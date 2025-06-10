@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const actividadSchema = new mongoose.Schema({
   usuarioId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Users',
     required: true,
   },
   accion: {

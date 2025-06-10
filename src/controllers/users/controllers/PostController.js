@@ -1,8 +1,8 @@
 import HttpCodes from 'http-status-codes';
 import bcryptjs from 'bcryptjs';
-
 import UserModel from '../../../models/userSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
+import { registrarActividad } from '../../actividades/index.js';
 
 export class PostController {
   static async postUser(req, res) {
@@ -19,6 +19,8 @@ export class PostController {
 
     try {
       const savedUser = await newUser.save();
+
+      await registrarActividad(req.user._id, 'Crear usuario', `Se creó el usuario ${body.email} con rol ${body.isAdmin ? 'admin' : 'no admin'}.`);
 
       const { password, ...userWithoutPassword } = savedUser.toObject();
 

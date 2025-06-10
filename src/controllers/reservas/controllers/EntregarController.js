@@ -1,6 +1,8 @@
 import HttpCodes from 'http-status-codes';
 import ReservaModel from '../../../models/reservaSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
+// ELIMINA ESTA LÍNEA: import { EntregarController } from './EntregarController.js';
+import { registrarActividad } from '../../actividades/index.js';
 
 export class EntregarController {
   static async entregarReserva(req, res) {
@@ -19,6 +21,12 @@ export class EntregarController {
         });
       }
 
+      // Asegúrate de que `req.user._id` esté disponible.
+      // Si el middleware de autenticación se ejecuta antes, debería estar.
+      // Si el usuario que realiza esta acción no es el que está logueado, ajusta esto.
+      // Por ejemplo, si el user._id que registra la acción es del admin que entrega.
+      await registrarActividad(req.user._id, 'Entregar moto', `Se entregó la reserva con ID ${id}.`);
+
       res.status(HttpCodes.OK).json({
         message: 'Reserva marcada como entregada con éxito',
         data: reserva,
@@ -29,4 +37,3 @@ export class EntregarController {
     }
   }
 }
-

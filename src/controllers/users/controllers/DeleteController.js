@@ -1,6 +1,7 @@
 import HttpCodes from 'http-status-codes';
 import UserModel from '../../../models/userSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
+import { registrarActividad } from '../../actividades/index.js';
 
 export class DeleteController {
   static async deleteUser(req, res) {
@@ -19,6 +20,8 @@ export class DeleteController {
           message: 'Usuario no encontrado',
         });
       }
+
+      await registrarActividad(req.user._id, 'Eliminar usuario', `Se eliminó el usuario ${deletedUser.email}.`);
 
       res.json({
         data: null,
