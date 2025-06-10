@@ -23,3 +23,20 @@ export const post_userValidationSchema = Joi.object({
   }),
   isAdmin: Joi.boolean().optional(),
 });
+
+export const forgotPasswordValidationSchema = Joi.object({
+  email: Joi.string().trim().email().required().messages({
+    'string.email': "El campo 'email' debe ser un correo válido",
+    'any.required': "El campo 'email' es requerido",
+    '*': "Revisa el campo 'email'",
+  }),
+});
+
+export const resetPasswordValidationSchema = Joi.object({
+  password: Joi.string().trim().regex(passwordRegex).required().messages({
+    'string.pattern.base':
+      "La nueva contraseña debe tener una minúscula, una mayúscula, un dígito y un caracter especial, entre 8 y 15 caracteres",
+    'any.required': "El campo 'password' es requerido",
+    '*': "Revisa la nueva contraseña",
+  }),
+});

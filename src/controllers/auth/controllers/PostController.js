@@ -130,8 +130,8 @@ export class PostController {
         to: email,
         subject: 'Recuperación de Contraseña',
         html: `<p>Hola ${user.fullname},</p>
-               <p>Haz clic <a href="*${resetToken}">aquí</a> para recuperar tu contraseña.</p>
-               <p>Este enlace expirará en 1 hora.</p>`,
+           <p>Haz clic <a href="${process.env.VITE_FRONTEND_URL}/reset-password/${resetToken}">aquí</a> para recuperar tu contraseña.</p>
+           <p>Este enlace expirará en 1 hora.</p>`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
@@ -160,6 +160,11 @@ export class PostController {
     const { token } = req.params;
     const { password } = req.body;
 
+        console.log('Backend - resetPassword - Token recibido en params:', token);
+    console.log('Backend - resetPassword - Body recibido:', req.body);
+    console.log('Backend - resetPassword - Contraseña desestructurada:', password);
+
+
     try {
       const user = await UserModel.findOne({
         resetToken: token,
@@ -172,7 +177,11 @@ export class PostController {
         });
       }
 
+            console.log('Backend - resetPassword - Contraseña antes de hashear:', password);
+
+
       const hashedPassword = bcryptjs.hashSync(password, 10);
+      console.log('Backend - resetPassword - Contraseña hasheada:', hashedPassword);
 
       user.password = hashedPassword;
       user.resetToken = null;
