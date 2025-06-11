@@ -1,6 +1,7 @@
 import HttpCodes from 'http-status-codes';
 import ReservaModel from '../../../models/reservaSchema.js';
 import MotoModel from '../../../models/motoSchema.js';
+import UserModel from '../../../models/userSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
 import { registrarActividad } from '../../actividades/index.js';
 
@@ -18,8 +19,9 @@ export class PostController {
     } = req.body;
     const { user } = req;
 
-    console.log('Backend - userId recibido de req.body:', userId);
+    console.log('Backend - userId recibido de req.body (vendedor):', userId);
     console.log('Backend - user._id (ID del admin logueado):', user._id);
+    console.log('Backend - user.isAdmin (¿Es admin?):', user.isAdmin);
 
     try {
       const reserva = new ReservaModel({
@@ -55,18 +57,31 @@ export class PostController {
         );
       } else {
         console.warn(
-          `Advertencia: No hay stock disponible para la moto ${moto.name} (ID: ${motoId}). La reserva se creó pero el stock no se descontó.`,
+          `Advertencia: No hay stock disponible para la moto ${moto.name}. La reserva se creó pero el stock no se descontó.`,
         );
         return res.status(HttpCodes.CONFLICT).json({
           message: `No hay stock disponible para ${moto.name}. La reserva se ha creado.`,
         });
       }
 
-      let detallesReserva = `Reserva para ${cliente} de la moto ${moto.name} (ID: ${motoId}).`;
+      const vendedorAsignado = await UserModel.findById(userId);
+      const nombreVendedor = vendedorAsignado ? vendedorAsignado.fullname : 'Desconocido';
+
+      let detallesReserva = '';
+
+      if (user.isAdmin) {
+        detallesReserva = `Reserva manual creada por ${user.fullname} para ${cliente} de la moto ${moto.name}, asignada al vendedor: ${nombreVendedor}.`;
+      } else {
+        detallesReserva = `Reserva creada por ${user.fullname} para ${cliente} de la moto ${moto.name}.`;
+      }
+      
       if (observaciones) {
         detallesReserva += ` Observaciones: ${observaciones}`;
       }
-        await registrarActividad(user._id, 'Crear reserva', detallesReserva);
+      
+      const accionTipo = user.isAdmin ? 'Crear reserva manual' : 'Crear reserva';
+
+      await registrarActividad(user._id, accionTipo, detallesReserva);
 
       res.status(HttpCodes.CREATED).json({
         data: reserva,

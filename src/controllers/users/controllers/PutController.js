@@ -22,7 +22,7 @@ export class PutController {
         });
       }
 
-      await registrarActividad(req.user._id, 'Editar rol', `Se cambió el rol del usuario ${updatedUser.email} a ${isAdmin ? 'admin' : 'no admin'}.`);
+      await registrarActividad(req.user._id, 'Editar rol', `Se cambió el rol del usuario ${updatedUser.email} a ${isAdmin ? 'admin' : 'vendedor'}.`);
 
       const { password, ...userWithoutPassword } = updatedUser.toObject();
 
