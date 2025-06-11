@@ -11,10 +11,9 @@ export class DeleteController {
     const userFullname = req.user.fullname;
 
     try {
-      const reservaToDelete = await ReservaModel.findById(id).populate(
-        'motoId',
-        'name',
-      );
+      const reservaToDelete = await ReservaModel.findById(id)
+        .populate('motoId', 'name')
+        .populate('userId', 'fullname');
 
       if (!reservaToDelete) {
         return res.status(HttpCodes.NOT_FOUND).json({
@@ -22,12 +21,15 @@ export class DeleteController {
         });
       }
 
+      const vendedorReservaNombre = reservaToDelete.userId
+        ? reservaToDelete.userId.fullname
+        : 'Desconocido';
+
       const deletedReserva = await ReservaModel.findByIdAndDelete(id);
 
       if (!deletedReserva) {
         return res.status(HttpCodes.NOT_FOUND).json({
-          message:
-            'La reserva no pudo ser eliminada después de la búsqueda inicial',
+          message: 'La reserva no pudo ser eliminada.',
         });
       }
 
@@ -44,8 +46,8 @@ export class DeleteController {
       }
 
       const detallesActividad =
-        `El usuario ${userFullname} eliminó la reserva del cliente "${reservaToDelete.cliente}" ` +
-        `para la moto "${reservaToDelete.motoId.name}". ` +
+        `El usuario ${userFullname} eliminó la reserva (del vendedor ${vendedorReservaNombre}) ` +
+        `del cliente "${reservaToDelete.cliente}" para la moto "${reservaToDelete.motoId.name}". ` +
         `El stock de la moto "${motoActualizada.name}" se incrementó a ${motoActualizada.quantity}.`;
 
       await registrarActividad(

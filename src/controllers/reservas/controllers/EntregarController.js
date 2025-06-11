@@ -1,19 +1,18 @@
 import HttpCodes from 'http-status-codes';
 import ReservaModel from '../../../models/reservaSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
-// ELIMINA ESTA LÍNEA: import { EntregarController } from './EntregarController.js';
 import { registrarActividad } from '../../actividades/index.js';
 
 export class EntregarController {
   static async entregarReserva(req, res) {
     const { id } = req.params;
+    const userIdPerformingAction = req.user._id;
+    const userFullnamePerformingAction = req.user.fullname;
 
     try {
-      const reserva = await ReservaModel.findByIdAndUpdate(
-        id,
-        { entregado: true, fechaEntrega: new Date() },
-        { new: true },
-      );
+      const reserva = await ReservaModel.findById(id)
+        .populate('userId', 'fullname')
+        .populate('motoId', 'name patente');
 
       if (!reserva) {
         return res.status(HttpCodes.NOT_FOUND).json({
@@ -21,11 +20,22 @@ export class EntregarController {
         });
       }
 
-      // Asegúrate de que `req.user._id` esté disponible.
-      // Si el middleware de autenticación se ejecuta antes, debería estar.
-      // Si el usuario que realiza esta acción no es el que está logueado, ajusta esto.
-      // Por ejemplo, si el user._id que registra la acción es del admin que entrega.
-      await registrarActividad(req.user._id, 'Entregar moto', `Se entregó la reserva con ID ${id}.`);
+      reserva.entregado = true;
+      reserva.fechaEntrega = new Date();
+      await reserva.save();
+
+      const vendedorReservaNombre = reserva.userId ? reserva.userId.fullname : 'Desconocido';
+      const motoNombre = reserva.motoId ? reserva.motoId.name : 'Desconocida';
+      const motoPatente = reserva.motoId ? reserva.motoId.patente : 'N/A';
+      const clienteNombre = reserva.cliente || 'Desconocido';
+      const comanda = reserva.numeroComanda || 'N/A';
+
+      const detallesActividad =
+        `El usuario ${userFullnamePerformingAction} marcó como entregada la reserva (del vendedor ${vendedorReservaNombre}) ` +
+        `del cliente "${clienteNombre}" para la moto "${motoNombre}". ` +
+        `La reserva se movió a entregadas recientemente.`;
+
+      await registrarActividad(userIdPerformingAction, 'Reserva entregada (recientemente)', detallesActividad);
 
       res.status(HttpCodes.OK).json({
         message: 'Reserva marcada como entregada con éxito',
