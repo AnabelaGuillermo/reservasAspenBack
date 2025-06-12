@@ -20,7 +20,7 @@ export class PostController {
     try {
       const savedUser = await newUser.save();
 
-      await registrarActividad(req.user._id, 'Crear usuario', `Se creó el usuario ${body.email} con rol ${body.isAdmin ? 'admin' : 'no admin'}.`);
+      await registrarActividad(req.user._id, 'Crear usuario', `Se creó el usuario ${body.email} con rol ${body.isAdmin ? 'admin' : 'vendedor'}.`);
 
       const { password, ...userWithoutPassword } = savedUser.toObject();
 

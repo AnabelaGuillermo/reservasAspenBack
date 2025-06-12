@@ -13,6 +13,7 @@ userRouter.get('/', isAuthenticated, isAdmin, Users.GetController.getUsers);
 
 userRouter.post(
   '/',
+  isAuthenticated,
   (req, res, next) => validateBody(req, res, next, post_userValidationSchema),
   Users.PostController.postUser,
 );
