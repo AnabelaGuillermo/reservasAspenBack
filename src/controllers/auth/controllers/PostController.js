@@ -18,11 +18,9 @@ const transporter = nodemailer.createTransport({
 export class PostController {
   static async postLogin(req, res) {
     const { email, password } = req.body;
-    console.log('postLogin - Email recibido:', email);
 
     try {
       const user = await UserModel.findOne({ email, isActive: true });
-      console.log('postLogin - Usuario encontrado:', user);
 
       if (!user) {
         return res.status(HttpCodes.UNAUTHORIZED).json({
@@ -141,7 +139,6 @@ export class PostController {
             message: 'Error al enviar el correo de recuperación',
           });
         }
-        console.log('Correo enviado: ' + info.response);
         res.json({
           message:
             'Se ha enviado un correo con las instrucciones para recuperar la contraseña',
@@ -160,11 +157,6 @@ export class PostController {
     const { token } = req.params;
     const { password } = req.body;
 
-        console.log('Backend - resetPassword - Token recibido en params:', token);
-    console.log('Backend - resetPassword - Body recibido:', req.body);
-    console.log('Backend - resetPassword - Contraseña desestructurada:', password);
-
-
     try {
       const user = await UserModel.findOne({
         resetToken: token,
@@ -177,11 +169,7 @@ export class PostController {
         });
       }
 
-            console.log('Backend - resetPassword - Contraseña antes de hashear:', password);
-
-
       const hashedPassword = bcryptjs.hashSync(password, 10);
-      console.log('Backend - resetPassword - Contraseña hasheada:', hashedPassword);
 
       user.password = hashedPassword;
       user.resetToken = null;

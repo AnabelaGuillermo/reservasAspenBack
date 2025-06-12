@@ -19,9 +19,6 @@ export const isAuthenticated = (req, res, next) => {
 
   try {
     const data = jwt.verify(token, process.env.SECRET_KEY);
-    console.log('isAuthenticated: Token verified successfully.');
-    console.log('isAuthenticated: Decoded data from JWT:', data);
-    console.log('isAuthenticated: Decoded data.user from JWT:', data.user);
     req.user = data.user;
 
     if (!req.user) {

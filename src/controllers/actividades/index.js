@@ -18,11 +18,7 @@ export const registrarActividad = async (usuarioId, accion, detalles) => {
 
       for (const actividad of actividadesAntiguas) {
         await ActividadModel.findByIdAndDelete(actividad._id);
-        console.log(`Actividad antigua eliminada: ${actividad._id}`);
       }
-      console.log(
-        `Se eliminaron ${actividadesAntiguas.length} actividades antiguas para mantener el límite de 50.`,
-      );
     }
   } catch (e) {
     console.error('Error al registrar actividad: ', e);

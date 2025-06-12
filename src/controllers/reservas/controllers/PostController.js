@@ -19,10 +19,6 @@ export class PostController {
     } = req.body;
     const { user } = req;
 
-    console.log('Backend - userId recibido de req.body (vendedor):', userId);
-    console.log('Backend - user._id (ID del admin logueado):', user._id);
-    console.log('Backend - user.isAdmin (¿Es admin?):', user.isAdmin);
-
     try {
       const reserva = new ReservaModel({
         userId: userId,
@@ -52,9 +48,6 @@ export class PostController {
       if (moto.quantity > 0) {
         moto.quantity -= 1;
         await moto.save();
-        console.log(
-          `Stock de la moto ${moto.name} descontado. Stock actual: ${moto.quantity}`,
-        );
       } else {
         console.warn(
           `Advertencia: No hay stock disponible para la moto ${moto.name}. La reserva se creó pero el stock no se descontó.`,
