@@ -6,7 +6,6 @@ dotenv.config();
 
 import './database/database.js';
 import { mainRouter } from './routes/mainRouter.js';
-import './cron/deleteOldEntregadas.js';
 
 console.clear();
 console.log('Inicializando servidor...');
