@@ -3,7 +3,7 @@ import { GetController } from './controllers/GetController.js';
 import { PostController } from './controllers/PostController.js';
 import { PutController } from './controllers/PutController.js';
 import { RestoreController } from './controllers/RestoreController.js';
-import { MarcarEntregadoController } from './controllers/MarcarEntregadoController.js'; // Importa el nuevo controlador
+import { MarcarEntregadoController } from './controllers/MarcarEntregadoController.js';
 import { MoverEntregadaController } from './controllers/MoverEntregadaController.js';
 
 export const Reservas = {

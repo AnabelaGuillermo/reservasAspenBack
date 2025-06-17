@@ -1,5 +1,3 @@
-// src/controllers/users/GetController.js
-
 import UsersModel from '../../../models/userSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
 
@@ -12,12 +10,11 @@ export class GetController {
 
       const filteredData = data.map((user) => {
         return {
-          _id: user._doc._id, // <-- ¡CAMBIO AQUÍ! Renombrado de nuevo a _id
+          _id: user._doc._id,
           fullname: user.fullname,
           username: user.username,
           email: user.email,
           isAdmin: user.isAdmin,
-          // Puedes agregar isAdmin aquí o filtrarlo desde la consulta de Mongoose si lo necesitas
         };
       });
 

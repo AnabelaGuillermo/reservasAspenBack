@@ -1,7 +1,7 @@
 import HttpCodes from 'http-status-codes';
 import MotoModel from '../../../models/motoSchema.js';
 import { internalError } from '../../../helpers/helpers.js';
-import { registrarActividad } from '../../actividades/index.js'; // Importa la función
+import { registrarActividad } from '../../actividades/index.js';
 
 export class PostController {
   static async postMoto(req, res) {
@@ -11,7 +11,7 @@ export class PostController {
       const moto = new MotoModel({ name, quantity });
       await moto.save();
 
-      await registrarActividad(req.user._id, 'Cargar moto', `Moto ${name} creada con ${quantity} unidades.`); // Registra la actividad
+      await registrarActividad(req.user._id, 'Cargar moto', `Moto ${name} creada con ${quantity} unidades.`);
 
       res.status(HttpCodes.CREATED).json({
         data: moto,

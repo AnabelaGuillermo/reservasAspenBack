@@ -1,4 +1,3 @@
-// src/middlewares/isAuthenticated.js
 import HttpCodes from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
@@ -36,7 +35,7 @@ export const isAuthenticated = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('isAuthenticated: Token verification failed:', error); // Log the actual error
+    console.error('isAuthenticated: Token verification failed:', error);
     res.status(401).json({
       data: null,
       message: 'El token no es válido',
