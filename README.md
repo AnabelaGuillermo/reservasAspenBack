@@ -56,10 +56,12 @@ Este es el backend del sistema de reservas de motos **Aspen**, desarrollado para
 ````bash
 git clone https://github.com/AnabelaGuillermo/reservasAspenBack.git
 cd reservasaspenback
+````
 
 ### Instalar las dependencias
 ```bash
   npm install
+````
 
 ### Crea el archivo .env:
 Copia el archivo .env.sample a .env y configura tus variables de entorno, incluyendo la cadena de conexión a tu base de datos MongoDB, el JWT_SECRET y cualquier otra variable necesaria (por ejemplo, para Nodemailer).
@@ -70,5 +72,6 @@ Copia el archivo .env.sample a .env y configura tus variables de entorno, incluy
 Para iniciar el servidor en modo desarrollo con recarga automática:
 ```bash
 npm run dev
+````
 
 Para cualquier consulta o sugerencia, puedes contactarme: anabela.guillermo@gmail.com
